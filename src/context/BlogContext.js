@@ -15,6 +15,18 @@ const blogReducer = (state, action) => {
       ];
     case 'delete_blogpost':
       return state.filter((blogPost) => blogPost.id !== action.payload);
+    case 'edit_blogpost':
+      return state.map((blogPost) => {
+        return blogPost.id === action.payload.id 
+          ? action.payload
+          : blogPost;
+      });
+        // the above is the same as the below
+        // if (blogPost.id === action.payload.id) {
+        //   return action.payload;
+        // } else {
+        //   return blogPost;
+        // }
 
     default:
       return state;
@@ -22,19 +34,11 @@ const blogReducer = (state, action) => {
 };
 
 const addBlogPost = (dispatch) => {
-
-  // example calling an api with call back
-  // return async (title, content, callback) => {
-  //   try {
-  //     await axios.post('/posts', { title, content });
-  //     dispatch({ type: 'add_blogpost', payload: { title, content } });
-  //     callback();
-  //   } catch (e) {
-
-  //   }
   return (title, content, callback) => {
     dispatch({ type: 'add_blogpost', payload: { title, content } });
-    callback();
+    if (callback) {
+      callback();
+    }
   };
 };
 
@@ -48,15 +52,20 @@ const deleteBlogPost = (dispatch) => {
   };
 };
 
-// export const { Context, Provider } = createDataContext(
-//   blogReducer,
-//   { addBlogPost, deleteBlogPost },
-//   []
-// );
+const editBlogPost = (dispatch) => {
+  return (id, title, content, callback) => {
+    dispatch({ 
+      type: 'edit_blogpost', 
+      payload: { id, title, content } 
+    });
+    if (callback) {
+      callback();
+    }
+  };
+};
 
-// For creating default content for testing
 export const { Context, Provider } = createDataContext(
-  blogReducer,
-  { addBlogPost, deleteBlogPost },
-  [{ title: 'TEST POST', content: 'TEST CONTENT', id: 1 }]
+  blogReducer, 
+  { addBlogPost, deleteBlogPost, editBlogPost }, 
+  [{ title: 'TEST POST', content: 'TEST CONTENT', id: 1}]
 );

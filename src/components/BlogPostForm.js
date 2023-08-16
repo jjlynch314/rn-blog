@@ -1,36 +1,46 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 
-const BlogPostForm = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+const BlogPostForm = ({ onSubmit, initialValues }) => {
+  const [title, setTitle] = useState(initialValues.title);
+  const [content, setContent] = useState(initialValues.content);
 
   return (
     <View>
-      <Text style={styles.label}>Enter Title:</Text>
-      <TextInput style={styles.input} value={title} onChangeText={(text) => setTitle(text)} />
-      <Text style={styles.label}>Enter Content:</Text>
-      <TextInput style={styles.input} value={content} onChangeText={(text) => setContent(text)} />
-      <Button
-        title="Save Blog Post"
-      // navigate as a callback function instead of a direct call 
-      // after addBlogPost because if we wanted to make an API call for example
-      // we would want to wait for that to finish before we navigate
-      // onPress={() => {
-      //   addBlogPost(title, content, () => {
-      //     navigation.navigate('Index');
-      //   });
-      // }}
-
-
-
-
+      <Text 
+        style={styles.label}>Enter Title:
+      </Text>
+      <TextInput 
+        style={styles.input} 
+        value={title} 
+        onChangeText={(text) => setTitle(text)} 
+      />
+      <Text 
+        style={styles.label}>Enter Content:
+      </Text>
+      <TextInput 
+        style={styles.input} 
+        value={content} 
+        onChangeText={(text) => setContent(text)}
+      />
+      <Button 
+        title="Save Blog Post" 
+        onPress={() => onSubmit(title, content )}
       />
     </View>
-  );
-
-
+  )
 };
+
+
+// defaultProps is automatically handled by react
+// if we don't pass in initialValues, it will automatically be set to an empty object
+BlogPostForm.defaultProps = {
+  initialValues: {
+    title: '',
+    content: ''
+  }
+};
+
 
 const styles = StyleSheet.create({
   input: {
@@ -45,7 +55,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 5,
     marginLeft: 5
-  }
+  } 
 });
 
 export default BlogPostForm;
